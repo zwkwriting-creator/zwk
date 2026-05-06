@@ -271,19 +271,29 @@
 </footer>
 
 <script>
+<script>
 async function buy(plan) {
-    const res = await fetch("/.netlify/functions/create-checkout-session", {
-        method: "POST",
-        body: JSON.stringify({ plan })
+  try {
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plan })
     });
-    const data = await res.json();
-    if (data.url) {
-        window.location.href = data.url;
-    } else {
-        alert("Checkout failed");
-    }
-}
 
+    const data = await res.json();
+
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert("Checkout failed");
+      console.log(data);
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
+  }
+}
+</script>
 function book(){
     const data = {
         name: document.getElementById('name').value,
