@@ -1,4 +1,4 @@
-!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -157,18 +157,19 @@ nav a {
 
 <script>
 async function buy(plan) {
-    const res = await fetch("/.netlify/functions/create-checkout-session", {
-        method: "POST",
-        body: JSON.stringify({ plan })
-    });
+  const res = await fetch("/api/create-checkout-session", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ plan })
+  });
 
-    const data = await res.json();
+  const data = await res.json();
 
-    if (data.url) {
-        window.location.href = data.url;
-    } else {
-        alert("Checkout failed");
-    }
+  if (data.url) {
+    window.location.href = data.url;
+  } else {
+    alert("Checkout failed");
+  }
 }
 
 function book(){
