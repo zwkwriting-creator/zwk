@@ -1,31 +1,10 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>ZWK Writing LLC | Modern IT & AI Solutions</title>
-<h1>ZWK Writing LLC</h1>
-<p>Choose a plan</p>
 
-
-
-<script>
-async function buy(plan) {
-  const res = await fetch("/.netlify/functions/create-checkout-session", {
-    method: "POST",
-    body: JSON.stringify({ plan })
-  });
-
-  const data = await res.json();
-
-  if (data.url) {
-    window.location.href = data.url;
-  } else {
-    alert("Checkout failed");
-  }
-}
-</script>
 <style>
 body {
     margin: 0;
@@ -88,6 +67,7 @@ nav a {
 
 <body>
 
+<header>
     <nav>
         <a href="#home">Home</a>
         <a href="#services">Services</a>
@@ -96,18 +76,14 @@ nav a {
     </nav>
 </header>
 
-<!-- HERO -->
 <section class="hero" id="home">
-    <h1>AI-Powered IT & Business Solutions</h1>
-    <p>We build systems, automation, and infrastructure that scale.</p>
-
+    <h1>ZWK Writing LLC</h1>
+    <p>AI-Powered IT & Business Solutions</p>
     <button class="btn" onclick="buy('basic')">Buy Now</button>
 </section>
 
-<!-- SERVICES -->
 <section class="section" id="services">
     <h2>Services</h2>
-
     <div class="cards">
         <div class="card"><h3>IT Support</h3></div>
         <div class="card"><h3>Networking</h3></div>
@@ -115,39 +91,71 @@ nav a {
     </div>
 </section>
 
-<!-- PRICING -->
 <section class="section" id="pricing">
     <h2>Pricing</h2>
-
     <div class="cards">
         <div class="card">
             <h3>Basic $10</h3>
             <button class="btn" onclick="buy('basic')">Buy</button>
         </div>
-
         <div class="card">
             <h3>Standard $25</h3>
             <button class="btn" onclick="buy('standard')">Buy</button>
         </div>
-
         <div class="card">
             <h3>Premium $50</h3>
             <button class="btn" onclick="buy('premium')">Buy</button>
         </div>
     </div>
 </section>
+<section class="section" id="about">
+    <h2>About ZWK Writing LLC</h2>
 
-<!-- BOOKING -->
+    <p style="max-width:800px; margin:auto; line-height:1.6;">
+        Based in Lehighton, PA 18235, ZWK Writing LLC was built from the ground up with a simple mission:
+        deliver modern IT solutions, automation, and real business results without the corporate nonsense.
+    </p>
+
+    <br>
+
+    <p style="max-width:800px; margin:auto; line-height:1.6;">
+        Founded by an individual who spent over 7 years studying and mastering technology, systems, and problem-solving,
+        the company was created to break away from outdated workflows and build something more efficient, scalable, and independent.
+    </p>
+
+    <br>
+
+    <p style="max-width:800px; margin:auto; line-height:1.6;">
+        Today, ZWK Writing LLC focuses on helping businesses streamline operations, strengthen IT infrastructure,
+        and leverage AI-powered automation to stay ahead in a fast-moving digital world.
+    </p>
+
+    <br>
+
+    <div class="cards">
+        <div class="card">
+            <h3>🚀 Efficiency First</h3>
+            <p>We build systems that save time, reduce costs, and eliminate repetitive work.</p>
+        </div>
+
+        <div class="card">
+            <h3>🔒 Reliable Infrastructure</h3>
+            <p>From networking to IT support, we make sure your systems stay secure and stable.</p>
+        </div>
+
+        <div class="card">
+            <h3>🤖 Smart Automation</h3>
+            <p>AI-driven tools that help your business scale without increasing workload.</p>
+        </div>
+    </div>
+</section>
 <section class="section" id="booking">
     <h2>Book a Call</h2>
-
     <input id="name" placeholder="Name"><br><br>
     <input id="email" placeholder="Email"><br><br>
     <input id="date" type="date"><br><br>
     <textarea id="details" placeholder="Details"></textarea><br><br>
-<button onclick="buy('basic')">Basic - $10</button>
-<button onclick="buy('standard')">Standard - $25</button>
-<button onclick="buy('premium')">Premium - $50</button>
+
     <button class="btn" onclick="book()">Submit</button>
 </section>
 
@@ -155,36 +163,47 @@ nav a {
     © 2026 ZWK Writing LLC
 </footer>
 
+<script>
 async function buy(plan) {
-  const res = await fetch("/api/create-checkout-session", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ plan })
-  });
+  try {
+    const res = await fetch("/api/create-checkout-session", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ plan })
+    });
 
-  const data = await res.json();
+    const data = await res.json();
 
-  if (data.url) {
-    window.location.href = data.url;
-  } else {
-    alert("Checkout failed");
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert("Checkout failed");
+      console.log(data);
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Server error");
   }
 }
-  
-function book(){
-    const data = {
-        name: document.getElementById('name').value,
-        email: document.getElementById('email').value,
-        date: document.getElementById('date').value,
-        details: document.getElementById('details').value
-    };
 
-    fetch('/.netlify/functions/book', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(data)
-    })
-    .then(res => alert(res.ok ? "Booking sent!" : "Error"))
+function book() {
+  const data = {
+    name: document.getElementById('name').value,
+    email: document.getElementById('email').value,
+    date: document.getElementById('date').value,
+    details: document.getElementById('details').value
+  };
+
+  fetch('/api/book', {
+    method: 'POST',
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  })
+  .then(res => res.ok ? alert("Booking sent!") : alert("Error"))
+  .catch(err => {
+    console.error(err);
+    alert("Server error");
+  });
 }
 </script>
 
